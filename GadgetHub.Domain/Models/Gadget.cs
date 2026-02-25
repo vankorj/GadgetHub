@@ -8,7 +8,7 @@ namespace GadgetHub.Domain.Models
 {
     public class Gadget
     {
-        public int GadgetID { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Brand { get; set; }
         public decimal Price { get; set; }

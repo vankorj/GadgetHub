@@ -5,6 +5,7 @@ using GadgetHub.Domain.Abstract;
 using GadgetHub.Domain.Models;
 using Moq;
 using System.Linq;
+using GadgetHub.Domain.Concrete;
 
 namespace GadgetHub.WebUI.Infrastructure
 {
@@ -33,6 +34,7 @@ namespace GadgetHub.WebUI.Infrastructure
 			// Create mock repository
 			Mock<IGadgetRepository> mock = new Mock<IGadgetRepository>();
 
+			/*
 			mock.Setup(m => m.Gadgets).Returns(new List<Gadget>
 			{
 				new Gadget { GadgetID = 1, Name = "iPhone 15", Brand = "Apple", Price = 999, Description = "Latest Apple smartphone", Category = "Smartphones"},
@@ -41,8 +43,8 @@ namespace GadgetHub.WebUI.Infrastructure
 				new Gadget { GadgetID = 4, Name = "Apple Watch", Brand = "Apple", Price = 399, Description = "Smart wearable device", Category = "Wearables"},
 				new Gadget { GadgetID = 5, Name = "AirPods Pro", Brand = "Apple", Price = 249, Description = "Wireless earbuds", Category = "Accessories"}
 			}.AsQueryable());
-
-			kernel.Bind<IGadgetRepository>().ToConstant(mock.Object);
+			*/
+			kernel.Bind<IGadgetRepository>().To<EFGadgetRepository>();
 		}
 	}
 }
