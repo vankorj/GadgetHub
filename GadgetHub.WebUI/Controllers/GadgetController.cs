@@ -16,12 +16,15 @@ namespace GadgetHub.WebUI.Controllers
 			repository = repo;
 		}
 
-		public ViewResult List(int page = 1)
+		public ViewResult List(string category, int page = 1)
 		{
+			var gadgets = repository.Gadgets
+				.Where(g => category == null || g.Category == category)
+				.OrderBy(g => g.Id);
+
 			GadgetsListViewModel model = new GadgetsListViewModel
 			{
-				Gadgets = repository.Gadgets
-					.OrderBy(g => g.Id)
+				Gadgets = gadgets
 					.Skip((page - 1) * pageSize)
 					.Take(pageSize),
 
@@ -29,8 +32,12 @@ namespace GadgetHub.WebUI.Controllers
 				{
 					CurrentPage = page,
 					ItemsPerPage = pageSize,
-					TotalItems = repository.Gadgets.Count()
-				}
+					TotalItems = category == null
+						? repository.Gadgets.Count()
+						: repository.Gadgets.Where(g => g.Category == category).Count()
+				},
+
+				CurrentCategory = category
 			};
 
 			return View(model);

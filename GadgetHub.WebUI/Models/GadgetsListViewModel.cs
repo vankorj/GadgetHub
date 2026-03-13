@@ -8,5 +8,7 @@ namespace GadgetHub.WebUI.Models
 		public IEnumerable<Gadget> Gadgets { get; set; }
 
 		public PagingInfo PagingInfo { get; set; }
+
+		public string CurrentCategory { get; set; }
 	}
 }
