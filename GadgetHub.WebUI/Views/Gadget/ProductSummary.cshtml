@@ -14,5 +14,14 @@
         <span class="badge bg-secondary">
             @Model.Category
         </span>
+
+        <!-- Add to Cart Form -->
+        @using (Html.BeginForm("AddToCart", "Cart", FormMethod.Post, new { @novalidate = "novalidate" }))
+        {
+            @Html.Hidden("id", Model.Id)
+            @Html.Hidden("returnUrl", Request.Url.ToString())
+
+            <button type="submit" class="btn btn-primary mt-3 w-100">Add to Cart</button>
+        }
     </div>
 </div>

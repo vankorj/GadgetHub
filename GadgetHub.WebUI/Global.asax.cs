@@ -1,4 +1,5 @@
 using GadgetHub.WebUI.Infrastructure;
+using GadgetHub.WebUI.Models;
 using Ninject;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -15,6 +16,12 @@ namespace GadgetHub.WebUI
 			IKernel kernel = new StandardKernel();
 			DependencyResolver.SetResolver(
 				new NinjectDependencyResolver(kernel));
+
+			// Register Cart Model Binder
+			ModelBinders.Binders.Add(
+				typeof(Cart),
+				new CartModelBinder()
+			);
 		}
 	}
 }
