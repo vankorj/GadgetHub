@@ -50,9 +50,35 @@ namespace GadgetHub.WebUI.Controllers
 			});
 		}
 
+		// CART SUMMARY WIDGET
 		public PartialViewResult Summary(Cart cart)
 		{
 			return PartialView(cart);
+		}
+
+		// CHECKOUT (GET)
+		public ViewResult Checkout()
+		{
+			return View(new ShippingDetails());
+		}
+
+		// CHECKOUT (POST)
+		[HttpPost]
+		public ViewResult Checkout(Cart cart, ShippingDetails shippingDetails)
+		{
+			if (cart.Lines.Count() == 0)
+			{
+				ModelState.AddModelError("", "Sorry, your cart is empty!");
+			}
+
+			if (ModelState.IsValid)
+			{
+				// TODO: Add order processing logic here
+				cart.Clear();
+				return View("Completed");
+			}
+
+			return View(shippingDetails);
 		}
 	}
 }

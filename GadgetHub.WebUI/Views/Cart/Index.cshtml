@@ -3,7 +3,6 @@
 <div class="container mt-4">
     <h2>Your Cart</h2>
 
-    <table class="table table-striped">
         <thead>
             <tr>
                 <th>Quantity</th>
@@ -13,17 +12,15 @@
                 <th></th>
             </tr>
         </thead>
+
         <tbody>
             @foreach (var line in Model.Cart.Lines)
             {
                 <tr>
                     <td>@line.Quantity</td>
                     <td>@line.Gadget.Name</td>
-                    <td class="text-end">$@line.Gadget.Price</td>
                     <td class="text-end">
-                        $@(line.Quantity * line.Gadget.Price)
                     </td>
-                    <td>
                         @using (Html.BeginForm("RemoveFromCart", "Cart"))
                         {
                             @Html.Hidden("id", line.Gadget.Id)
@@ -39,13 +36,20 @@
         </tbody>
     </table>
 
+    <!-- TOTAL -->
     <div class="text-end">
-        <h4>Total: $@Model.Cart.ComputeTotalValue()</h4>
     </div>
 
+    <!-- ACTION BUTTONS -->
     <div class="mt-3 d-flex justify-content-between">
+
         <a href="@Model.ReturnUrl" class="btn btn-secondary">
             Continue Shopping
         </a>
+
+        <a href="@Url.Action("Checkout", "Cart")" class="btn btn-success">
+            Checkout Now
+        </a>
+
     </div>
 </div>
