@@ -20,12 +20,22 @@ namespace GadgetHub.Domain.Concrete
 			else
 			{
 				Gadget dbEntry = context.Gadgets.Find(gadget.Id);
+
 				if (dbEntry != null)
 				{
 					dbEntry.Name = gadget.Name;
 					dbEntry.Description = gadget.Description;
 					dbEntry.Price = gadget.Price;
 					dbEntry.Category = gadget.Category;
+
+					// =========================
+					// IMAGE SUPPORT (NEW)
+					// =========================
+					if (gadget.ImageData != null)
+					{
+						dbEntry.ImageData = gadget.ImageData;
+						dbEntry.ImageMimeType = gadget.ImageMimeType;
+					}
 				}
 			}
 

@@ -1,7 +1,6 @@
 ﻿using GadgetHub.Domain.Abstract;
 using GadgetHub.Domain.Models;
 using GadgetHub.WebUI.Models;
-using GadgetHubs.Domain.Abstract;
 using System.Linq;
 using System.Web.Mvc;
 

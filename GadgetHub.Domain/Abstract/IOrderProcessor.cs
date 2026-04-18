@@ -1,7 +1,7 @@
 ﻿using GadgetHub.Domain.Models;
 using GadgetHub.WebUI.Models;
 
-namespace GadgetHubs.Domain.Abstract
+namespace GadgetHub.Domain.Abstract
 {
 	public interface IOrderProcessor
 	{

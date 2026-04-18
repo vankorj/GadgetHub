@@ -1,5 +1,4 @@
-﻿
-@model GadgetHub.Domain.Models.Gadget
+﻿@model GadgetHub.Domain.Models.Gadget
 
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -9,8 +8,10 @@
     @(Model.Id == 0 ? "Admin: Add" : "Admin: Edit")
 </h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
+    @Html.AntiForgeryToken()
+
     @Html.HiddenFor(m => m.Id)
 
     <div class="form-group">
@@ -36,6 +37,19 @@
         @Html.TextBoxFor(m => m.Category, new { @class = "form-control" })
         @Html.ValidationMessageFor(m => m.Category)
     </div>
+
+    <div class="form-group">
+        <label>Product Image</label>
+        <input type="file" name="image" class="form-control" />
+    </div>
+
+    if (Model != null && Model.ImageData != null)
+    {
+        <div class="form-group">
+            <img src='@Url.Action("GetImage", "Product", new { productId = Model.Id })'
+                 style="max-width:150px;" />
+        </div>
+    }
 
     <button type="submit" class="btn btn-success">Save</button>
 }

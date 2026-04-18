@@ -1,7 +1,7 @@
 ﻿using GadgetHub.Domain.Abstract;
 using GadgetHub.Domain.Models;
 using GadgetHub.WebUI.Models;
-using GadgetHubs.Domain.Abstract;
+using GadgetHub.Domain.Abstract;
 using System.IO;
 using System.Net;
 using System.Net.Mail;

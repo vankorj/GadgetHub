@@ -1,58 +1,119 @@
 ﻿using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using GadgetHub.Domain.Abstract;
 using GadgetHub.Domain.Models;
 
 namespace GadgetHub.WebUI.Controllers
 {
+	[Authorize]
 	public class AdminController : Controller
 	{
-		private IGadgetRepository repository;
+		private readonly IGadgetRepository repository;
 
 		public AdminController(IGadgetRepository repo)
 		{
 			repository = repo;
 		}
 
+		// =========================
+		// LIST
+		// =========================
 		public ViewResult Index()
 		{
 			return View(repository.Gadgets);
 		}
 
-		public ViewResult Edit(int Id)
+		// =========================
+		// EDIT (GET)
+		// =========================
+		public ViewResult Edit(int id)
 		{
-			Gadget gadget = repository.Gadgets
-				.FirstOrDefault(p => p.Id == Id);
+			var gadget = repository.Gadgets
+				.FirstOrDefault(p => p.Id == id);
 
-			return View(gadget);
-		}
-
-		public ViewResult Create()
-		{
-			return View("Edit", new Gadget());
-		}
-
-		[HttpPost]
-		public ActionResult Edit(Gadget gadget)
-		{
-			if (ModelState.IsValid)
+			if (gadget == null)
 			{
-				repository.SaveGadget(gadget);
-				TempData["message"] = "Gadget saved";
-				return RedirectToAction("Index");
+				return View("Error"); // or RedirectToAction("Index")
 			}
 
 			return View(gadget);
 		}
 
-		public ActionResult Delete(int Id)
+		// =========================
+		// CREATE
+		// =========================
+		public ViewResult Create()
 		{
-			Gadget gadget = repository.Gadgets
-				.FirstOrDefault(p => p.Id == Id);
+			return View("Edit", new Gadget());
+		}
+
+		// =========================
+		// SAVE (CREATE + EDIT)
+		// =========================
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult Edit(Gadget gadget, HttpPostedFileBase image)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(gadget);
+			}
+
+			// GET existing record (important for updates)
+			var existing = repository.Gadgets
+				.FirstOrDefault(p => p.Id == gadget.Id);
+
+			if (existing != null)
+			{
+				// UPDATE existing fields safely
+				existing.Name = gadget.Name;
+				existing.Price = gadget.Price;
+				existing.Description = gadget.Description;
+				existing.Category = gadget.Category;
+
+				// IMAGE LOGIC (ONLY overwrite if new image uploaded)
+				if (image != null && image.ContentLength > 0)
+				{
+					existing.ImageMimeType = image.ContentType;
+
+					existing.ImageData = new byte[image.ContentLength];
+					image.InputStream.Read(existing.ImageData, 0, image.ContentLength);
+				}
+
+				repository.SaveGadget(existing);
+			}
+			else
+			{
+				// CREATE NEW
+				if (image != null && image.ContentLength > 0)
+				{
+					gadget.ImageMimeType = image.ContentType;
+
+					gadget.ImageData = new byte[image.ContentLength];
+					image.InputStream.Read(gadget.ImageData, 0, image.ContentLength);
+				}
+
+				repository.SaveGadget(gadget);
+			}
+
+			TempData["message"] = "Gadget saved";
+			return RedirectToAction("Index");
+		}
+
+		// =========================
+		// DELETE
+		// =========================
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult Delete(int id)
+		{
+			var gadget = repository.Gadgets
+				.FirstOrDefault(p => p.Id == id);
 
 			if (gadget != null)
 			{
-				repository.DeleteGadget(Id);
+				repository.DeleteGadget(id);
 				TempData["message"] = "Gadget deleted";
 			}
 

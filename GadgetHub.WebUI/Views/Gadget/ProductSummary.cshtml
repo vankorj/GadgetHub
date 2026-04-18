@@ -1,6 +1,20 @@
 ﻿@model GadgetHub.Domain.Models.Gadget
 
 <div class="card mb-3">
+
+    @if (Model.ImageData != null)
+    {
+        <img src="@Url.Action("GetImage", "Gadget", new { id = Model.Id })"
+             class="card-img-top"
+             style="max-height:200px; object-fit:cover;" />
+    }
+    else
+    {
+        <img src="~/Content/placeholder.png"
+             class="card-img-top"
+             style="max-height:200px; object-fit:cover;" />
+    }
+
     <div class="card-body">
         <h5 class="card-title">@Model.Name</h5>
         <h6 class="card-subtitle mb-2 text-muted">@Model.Brand</h6>
@@ -15,13 +29,14 @@
             @Model.Category
         </span>
 
-        <!-- Add to Cart Form -->
         @using (Html.BeginForm("AddToCart", "Cart", FormMethod.Post, new { @novalidate = "novalidate" }))
         {
             @Html.Hidden("id", Model.Id)
             @Html.Hidden("returnUrl", Request.Url.ToString())
 
-            <button type="submit" class="btn btn-primary mt-3 w-100">Add to Cart</button>
+            <button type="submit" class="btn btn-primary mt-3 w-100">
+                Add to Cart
+            </button>
         }
     </div>
 </div>

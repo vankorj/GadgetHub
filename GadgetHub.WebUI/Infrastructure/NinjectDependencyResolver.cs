@@ -1,7 +1,8 @@
 ﻿using GadgetHub.Domain.Abstract;
 using GadgetHub.Domain.Concrete;
+using GadgetHub.Domain.Infrastructure.Concrete;
 using GadgetHub.Domain.Models;
-using GadgetHubs.Domain.Abstract;
+using GadgetHub.Domain.Abstract;
 using Moq;
 using Ninject;
 using System.Collections.Generic;
@@ -33,11 +34,14 @@ namespace GadgetHub.WebUI.Infrastructure
 
 		private void AddBindings()
 		{
-			// Existing binding (keep this)
-			kernel.Bind<IGadgetRepository>().To<EFGadgetRepository>();
+			// Existing binding
+			kernel.Bind<IGadgetRepository>()
+				  .To<EFGadgetRepository>();
 
-			// Email settings from Web.config
-			kernel.Bind<EmailSettings>().ToSelf().InSingletonScope()
+			// Email settings
+			kernel.Bind<EmailSettings>()
+				.ToSelf()
+				.InSingletonScope()
 				.WithConstructorArgument("settings", new EmailSettings
 				{
 					WriteAsFile = bool.Parse(ConfigurationManager.AppSettings["Email.WriteAsFile"]),
@@ -45,7 +49,14 @@ namespace GadgetHub.WebUI.Infrastructure
 				});
 
 			// Order processor
-			kernel.Bind<IOrderProcessor>().To<EmailOrderProcessor>();
+			kernel.Bind<IOrderProcessor>()
+				  .To<EmailOrderProcessor>();
+
+			// =========================
+			// AUTH PROVIDER (ADD THIS)
+			// =========================
+			kernel.Bind<IAuthProvider>()
+				  .To<FormsAuthProvider>();
 		}
 	}
 }
