@@ -102,6 +102,8 @@
     <Compile Include="Abstract\IOrderProcessor.cs" />
     <Compile Include="Concrete\EFDbContext.cs" />
     <Compile Include="Concrete\EFGadgetRepository.cs" />
+    <Compile Include="Concrete\EmailOrderProcessor.cs" />
+    <Compile Include="Concrete\EmailSettings.cs" />
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\Gadget.cs" />
     <Compile Include="Models\ShippingDetails.cs" />

@@ -1,6 +1,7 @@
 ﻿using GadgetHub.Domain.Abstract;
 using GadgetHub.Domain.Models;
 using GadgetHub.WebUI.Models;
+using GadgetHubs.Domain.Abstract;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -9,10 +10,12 @@ namespace GadgetHub.WebUI.Controllers
 	public class CartController : Controller
 	{
 		private IGadgetRepository repository;
+		private IOrderProcessor orderProcessor;
 
-		public CartController(IGadgetRepository repo)
+		public CartController(IGadgetRepository repo, IOrderProcessor processor)
 		{
 			repository = repo;
+			orderProcessor = processor;
 		}
 
 		public RedirectToRouteResult AddToCart(Cart cart, int id, string returnUrl)
@@ -50,32 +53,31 @@ namespace GadgetHub.WebUI.Controllers
 			});
 		}
 
-		// CART SUMMARY WIDGET
 		public PartialViewResult Summary(Cart cart)
 		{
 			return PartialView(cart);
 		}
 
-		// CHECKOUT (GET)
 		public ViewResult Checkout()
 		{
 			return View(new ShippingDetails());
 		}
 
-		// CHECKOUT (POST)
 		[HttpPost]
 		public ViewResult Checkout(Cart cart, ShippingDetails shippingDetails)
 		{
-			if (cart.Lines.Count() == 0)
+			if (!cart.Lines.Any())
 			{
 				ModelState.AddModelError("", "Sorry, your cart is empty!");
 			}
 
 			if (ModelState.IsValid)
 			{
-				// TODO: Add order processing logic here
+				orderProcessor.ProcessOrder(cart, shippingDetails);
+
 				cart.Clear();
-				return View("Completed");
+
+				return View("Completed", shippingDetails);
 			}
 
 			return View(shippingDetails);

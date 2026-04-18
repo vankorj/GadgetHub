@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using GadgetHub.Domain.Models;
 
 namespace GadgetHub.Domain.Models
 {

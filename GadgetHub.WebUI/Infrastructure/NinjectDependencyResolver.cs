@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Web.Mvc;
-using Ninject;
-using GadgetHub.Domain.Abstract;
-using GadgetHub.Domain.Models;
-using Moq;
-using System.Linq;
+﻿using GadgetHub.Domain.Abstract;
 using GadgetHub.Domain.Concrete;
+using GadgetHub.Domain.Models;
+using GadgetHubs.Domain.Abstract;
+using Moq;
+using Ninject;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace GadgetHub.WebUI.Infrastructure
 {
@@ -31,20 +33,19 @@ namespace GadgetHub.WebUI.Infrastructure
 
 		private void AddBindings()
 		{
-			// Create mock repository
-			Mock<IGadgetRepository> mock = new Mock<IGadgetRepository>();
-
-			/*
-			mock.Setup(m => m.Gadgets).Returns(new List<Gadget>
-			{
-				new Gadget { GadgetID = 1, Name = "iPhone 15", Brand = "Apple", Price = 999, Description = "Latest Apple smartphone", Category = "Smartphones"},
-				new Gadget { GadgetID = 2, Name = "Galaxy S23", Brand = "Samsung", Price = 899, Description = "Flagship Samsung phone", Category = "Smartphones"},
-				new Gadget { GadgetID = 3, Name = "MacBook Pro", Brand = "Apple", Price = 1999, Description = "High-performance laptop", Category = "Laptops"},
-				new Gadget { GadgetID = 4, Name = "Apple Watch", Brand = "Apple", Price = 399, Description = "Smart wearable device", Category = "Wearables"},
-				new Gadget { GadgetID = 5, Name = "AirPods Pro", Brand = "Apple", Price = 249, Description = "Wireless earbuds", Category = "Accessories"}
-			}.AsQueryable());
-			*/
+			// Existing binding (keep this)
 			kernel.Bind<IGadgetRepository>().To<EFGadgetRepository>();
+
+			// Email settings from Web.config
+			kernel.Bind<EmailSettings>().ToSelf().InSingletonScope()
+				.WithConstructorArgument("settings", new EmailSettings
+				{
+					WriteAsFile = bool.Parse(ConfigurationManager.AppSettings["Email.WriteAsFile"]),
+					FileLocation = ConfigurationManager.AppSettings["Email.FileLocation"]
+				});
+
+			// Order processor
+			kernel.Bind<IOrderProcessor>().To<EmailOrderProcessor>();
 		}
 	}
 }
