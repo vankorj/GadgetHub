@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using GadgetHub.Domain.Models;
 
 namespace GadgetHub.Domain.Abstract
 {
 	public interface IGadgetRepository
 	{
-		IQueryable<Gadget> Gadgets { get; }
+		IEnumerable<Gadget> Gadgets { get; }
+
+		void SaveGadget(Gadget gadget);
+
+		Gadget DeleteGadget(int id);
 	}
 }

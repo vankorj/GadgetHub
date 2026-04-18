@@ -1,0 +1,33 @@
+﻿@model IEnumerable<GadgetHub.Domain.Models.Gadget>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Products</h2>
+
+<p>
+    @Html.ActionLink("Add New Gadget", "Create", null, new { @class = "btn btn-primary" })
+</p>
+
+<table class="table table-sm table-striped">
+    <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Category</th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Name</td>
+            <td>@item.Price</td>
+            <td>@item.Category</td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { Id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { Id = item.Id })
+            </td>
+        </tr>
+    }
+</table>

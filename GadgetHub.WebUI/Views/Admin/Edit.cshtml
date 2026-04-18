@@ -1,0 +1,41 @@
+﻿
+@model GadgetHub.Domain.Models.Gadget
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>
+    @(Model.Id == 0 ? "Admin: Add" : "Admin: Edit")
+</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(m => m.Id)
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name)
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Name)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Description)
+        @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 5 })
+        @Html.ValidationMessageFor(m => m.Description)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Price)
+        @Html.TextBoxFor(m => m.Price, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Price)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Category)
+        @Html.TextBoxFor(m => m.Category, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Category)
+    </div>
+
+    <button type="submit" class="btn btn-success">Save</button>
+}
